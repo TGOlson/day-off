@@ -6,8 +6,10 @@ var D3 = {
   svg: null,
 
   init: function(){
-    this.setSvgCanvas()
-    this.setEventForVisuals()
+    D3.setSvgCanvas()
+    D3.setClickEvents()
+    D3.setTimeEvents()
+    D3.setResizeEvents()
   },
 
   setSvgCanvas: function(width, height){
@@ -20,14 +22,34 @@ var D3 = {
     .attr("height", D3.height)
   },
 
-  setEventForVisuals: function(keywordID){
+  setTimeEvents: function(){
+    var e = { 
+      clientX: D3.width / 2,
+      clientY: D3.height / 2
+    }
+    setInterval( function(){ D3.appendNewCircle(e) }, 10)
+  },
+
+  setClickEvents: function(keywordID){
     $('body').on('click', D3.appendNewCircle)
   },
 
-  appendNewCircle: function(e){
+  setResizeEvents: function(){
+    $(window).resize(function(){
+      $('svg')[0].width.baseVal.value = $(window).width() - 5
+      $('svg')[0].height.baseVal.value = $(window).height() - 5
+      D3.width = $(window).width() - 5
+      D3.height = $(window).height() - 5
+    })
+  },
+
+  appendNewCircle: function(){
+    var xLoc = D3.width / 2 - 10
+    var yLoc = D3.height / 2 - 10
+
     D3.svg.insert("circle", "rect")
-    .attr("cx", e.clientX)
-    .attr("cy", e.clientY)
+    .attr("cx", xLoc + Math.random() * 20)
+    .attr("cy", yLoc + Math.random() * 20)
     .attr("r", 40)
     .style("stroke", D3.color(Math.floor( Math.random()*20 + 1 )))
     .style("stroke-opacity", .5)
